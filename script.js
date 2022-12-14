@@ -16,7 +16,7 @@ class Calculator {
     }
 
     appendNumber(number) {
-        if (number === '.' && this.currentOperand.includes('.')) return
+        if (number === '.' && this.currentOperand.includes('.')) return;
         this.currentOperand = this.currentOperand.toString() + number.toString();
     }
 
@@ -55,12 +55,36 @@ class Calculator {
         this.operation = undefined;
         this.previousOperand = '';
     }
+    getDisplayNumber(number) {
+        const stringNumber = number.toString();
+        const integerDigits = parseFloat(stringNumber.split('.')[0]);
+        const decimalDigits = stringNumber.split('.')[1];
+        let integerDisplay;
+        if (isNaN(integerDigits)) {
+            integerDisplay = '';
+        } else {
+            integerDisplay = integerDigits.toLocaleString('en', {
+                maximumFractionDigits: 0
+            });
+        }
+        if (decimalDigits != null) {
+            return `${integerDisplay}.${decimalDigits}`;
+        } else {
+            return integerDisplay;
+        }
+        const floatNumber = parseFloat(number);
+        if (isNaN(floatNumber)) return '';
+        return floatNumber.toLocaleString('en');
+    }
 
     updateDisplay() {
-        this.currentOperandTextElement.innerText = this.currentOperand;
+        this.currentOperandTextElement.innerText =
+            this.getDisplayNumber(this.currentOperand);
         if (this.operation != null) {
             this.previousOperandTextElement.innerText =
                 `${this.previousOperand} ${this.operation}`;
+        } else {
+            this.previousOperandTextElement.innerText = '';
         }
     }
 }
